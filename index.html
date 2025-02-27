@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Party Invitations</title>
+  <style>
+    :root {
+      --primary-color: #6c63ff;
+      --secondary-color: #ff6584;
+      --accent-color: #43cea2;
+      --text-color: #333;
+      --light-color: #f8f9fa;
+      --dark-color: #343a40;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--light-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1, h2, h3 {
+      margin-bottom: 20px;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    /* Button Styles */
+    .btn {
+      padding: 12px 24px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 10px;
+      box-shadow: var(--shadow);
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(108, 99, 255, 0.2);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn-secondary {
+      background-color: var(--secondary-color);
+    }
+
+    .btn-accent {
+      background-color: var(--accent-color);
+    }
+
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 20px;
+      animation: slideInRight 0.5s ease-in-out;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: var(--transition);
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+    }
+
+    /* Card Styles */
+    .card {
+      background-color: white;
+      border-radius: 12px;
+      padding: 30px;
+      margin: 20px 0;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Home Selection */
+    .mode-selection {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-height: 80vh;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .mode-selection h1 {
+      font-size: 3rem;
+      margin-bottom: 2rem;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .mode-selection p {
+      font-size: 1.2rem;
+      max-width: 600px;
+      margin: 0 auto 3rem auto;
+      color: #666;
+    }
+
+    .mode-buttons {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .mode-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+      border-radius: 12px;
+      background-color: white;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      cursor: pointer;
+      width: 250px;
+    }
+
+    .mode-button:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .mode-button h3 {
+      margin-top: 20px;
+      font-size: 1.5rem;
+    }
+
+    .mode-button p {
+      font-size: 0.9rem;
+      color: #777;
+      margin-top: 10px;
+    }
+
+    .mode-icon {
+      font-size: 3rem;
+      color: var(--primary-color);
+    }
+
+    /* Creation Form */
+    .creation-form {
+      max-width: 800px;
+      margin: 0 auto;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .theme-selection {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .theme-option {
+      width: 100px;
+      height: 70px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 3px solid transparent;
+    }
+
+    .theme-option:hover {
+      transform: scale(1.05);
+    }
+
+    .theme-option.selected {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+    }
+
+    .theme-option-1 { background: linear-gradient(to right, #fc5c7d, #6a82fb); }
+    .theme-option-2 { background: linear-gradient(to right, #43cea2, #185a9d); }
+    .theme-option-3 { background: linear-gradient(to right, #ff6e7f, #bfe9ff); }
+    .theme-option-4 { background: linear-gradient(to right, #c471f5, #fa71cd); }
+    .theme-option-5 { background: linear-gradient(to right, #f7971e, #ffd200); }
+
+    /* View Mode */
+    .code-entry {
+      max-width: 500px;
+      margin: 0 auto;
+      text-align: center;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .view-invitation {
+      max-width: 800px;
+      margin: 0 auto;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    /* Invitation Display */
+    .invitation-display {
+      position: relative;
+      max-width: 800px;
+      margin: 2rem auto;
+      min-height: 500px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .invitation-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .invitation-content {
+      position: relative;
+      z-index: 2;
+      padding: 40px;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.3);
+    }
+
+    .invitation-title {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: revealText 1.5s ease forwards;
+    }
+
+    .invitation-details {
+      opacity: 0;
+      animation: fadeIn 1s ease forwards;
+      animation-delay: 0.5s;
+    }
+
+    .invitation-detail {
+      display: flex;
+      margin-bottom: 15px;
+    }
+
+    .detail-icon {
+      margin-right: 15px;
+      width: 24px;
+    }
+
+    .invitation-host {
+      margin-top: 2rem;
+      font-style: italic;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards;
+      animation-delay: 1s;
+    }
+
+    .invitation-extra {
+      margin-top: 2rem;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards;
+      animation-delay: 1.5s;
+    }
+
+    .invitation-code {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background-color: rgba(255, 255, 255, 0.2);
+      padding: 5px 15px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards;
+      animation-delay: 2s;
+    }
+
+    /* Success & Generated Code */
+    .success-message {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 30px;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .generated-code {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--primary-color);
+      margin: 20px 0;
+      padding: 20px;
+      border: 2px dashed var(--primary-color);
+      border-radius: 8px;
+      background-color: rgba(108, 99, 255, 0.1);
+      animation: pulse 2s infinite;
+    }
+
+    .copy-button {
+      margin-bottom: 20px;
+    }
+
+    .share-options {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .share-button {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .share-button:hover {
+      transform: translateY(-5px);
+    }
+
+    .share-facebook { background-color: #3b5998; }
+    .share-twitter { background-color: #1da1f2; }
+    .share-whatsapp { background-color: #25d366; }
+    .share-email { background-color: #ea4335; }
+
+    /* Confetti Animation */
+    .confetti-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: var(--primary-color);
+      opacity: 0.9;
+      animation: fall 5s linear infinite;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes revealText {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideInRight {
+      from { transform: translateX(50px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* Navigation */
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .mode-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .mode-button {
+        width: 100%;
+        max-width: 300px;
+      }
+
+      .invitation-title {
+        font-size: 2rem;
+      }
+
+      .invitation-content {
+        padding: 20px;
+      }
+      
+      .theme-selection {
+        justify-content: center;
+      }
+    }
+  </style>
+  <!-- Font Awesome for icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.21.2/babel.min.js"></script>
+
+  <script type="text/babel">
+    // Main App Component
+    const App = () => {
+      const [currentView, setCurrentView] = React.useState('home');
+      const [partyDetails, setPartyDetails] = React.useState({
+        title: '',
+        location: '',
+        date: '',
+        time: '',
+        host: '',
+        details: '',
+        theme: 'theme-option-1',
+      });
+      const [generatedCode, setGeneratedCode] = React.useState('');
+      const [viewCode, setViewCode] = React.useState('');
+      const [viewInvitation, setViewInvitation] = React.useState(null);
+      const [showConfetti, setShowConfetti] = React.useState(false);
+
+      // Store invitations in localStorage
+      const invitations = React.useRef(
+        JSON.parse(localStorage.getItem('invitations')) || {}
+      );
+
+      // Save invitation to localStorage
+      const saveInvitation = (code, details) => {
+        invitations.current[code] = details;
+        localStorage.setItem('invitations', JSON.stringify(invitations.current));
+      };
+
+      // Generate a random code
+      const generateRandomCode = () => {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let result = '';
+        for (let i = 0; i < 6; i++) {
+          result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return result;
+      };
+
+      // Handle form submission
+      const handleCreateInvitation = (e) => {
+        e.preventDefault();
+        const code = generateRandomCode();
+        setGeneratedCode(code);
+        saveInvitation(code, partyDetails);
+        setCurrentView('success');
+      };
+
+      // Handle input changes
+      const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setPartyDetails((prev) => ({
+          ...prev,
+          [name]: value,
+        }));
+      };
+
+      // Handle theme selection
+      const handleThemeSelect = (theme) => {
+        setPartyDetails((prev) => ({
+          ...prev,
+          theme,
+        }));
+      };
+
+      // Handle view invitation by code
+      const handleViewInvitation = (e) => {
+        e.preventDefault();
+        const code = viewCode.toUpperCase();
+        const invitation = invitations.current[code];
+        
+        if (invitation) {
+          setViewInvitation({ ...invitation, code });
+          setCurrentView('invitation');
+          setShowConfetti(true);
+          setTimeout(() => setShowConfetti(false), 5000);
+        } else {
+          alert('Invalid invitation code. Please check and try again.');
+        }
+      };
+
+      // Generate confetti elements
+      const generateConfetti = () => {
+        if (!showConfetti) return null;
+        
+        const confetti = [];
+        const colors = ['#6c63ff', '#ff6584', '#43cea2', '#ffcd3c', '#ff7675'];
+        
+        for (let i = 0; i < 100; i++) {
+          const size = Math.random() * 10 + 5;
+          const color = colors[Math.floor(Math.random() * colors.length)];
+          const startPositionLeft = Math.random() * 100;
+          const startPositionTop = Math.random() * -100;
+          const duration = Math.random() * 3 + 2;
+          const delay = Math.random() * 2;
+          
+          const style = {
+            width: `${size}px`,
+            height: `${size}px`,
+            backgroundColor: color,
+            left: `${startPositionLeft}%`,
+            top: `${startPositionTop}px`,
+            animationDuration: `${duration}s`,
+            animationDelay: `${delay}s`,
+          };
+          
+          confetti.push(<div key={i} className="confetti" style={style} />);
+        }
+        
+        return confetti;
+      };
+
+      // Copy code to clipboard
+      const copyToClipboard = () => {
+        navigator.clipboard.writeText(generatedCode)
+          .then(() => {
+            alert('Code copied to clipboard!');
+          })
+          .catch(err => {
+            console.error('Error copying text: ', err);
+          });
+      };
+
+      // Render different views based on currentView state
+      const renderView = () => {
+        switch (currentView) {
+          case 'home':
+            return (
+              <div className="mode-selection">
+                <h1>Party Invitation Creator</h1>
+                <p>Create and share beautiful digital invitations for your next event.</p>
+                <div className="mode-buttons">
+                  <div className="mode-button" onClick={() => setCurrentView('create')}>
+                    <div className="mode-icon">
+                      <i className="fas fa-edit"></i>
+                    </div>
+                    <h3>Create an Invitation</h3>
+                    <p>Design a new party invitation to share with your guests.</p>
+                  </div>
+                  <div className="mode-button" onClick={() => setCurrentView('view')}>
+                    <div className="mode-icon">
+                      <i className="fas fa-envelope-open-text"></i>
+                    </div>
+                    <h3>View an Invitation</h3>
+                    <p>Enter an invitation code to see event details.</p>
+                  </div>
+                </div>
+              </div>
+            );
+          
+          case 'create':
+            return (
+              <div className="creation-form">
+                <div className="nav-buttons">
+                  <button className="btn" onClick={() => setCurrentView('home')}>
+                    <i className="fas fa-arrow-left"></i> Back to Home
+                  </button>
+                </div>
+                <h2>Create Your Party Invitation</h2>
+                <div className="card">
+                  <form onSubmit={handleCreateInvitation}>
+                    <div className="form-group">
+                      <label htmlFor="title">Party Title</label>
+                      <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        value={partyDetails.title}
+                        onChange={handleInputChange}
+                        placeholder="Enter party title"
+                        required
+                      />
+                    </div>
+                    
+                    <div className="form-group">
+                      <label htmlFor="location">Location</label>
+                      <input
+                        type="text"
+                        id="location"
+                        name="location"
+                        value={partyDetails.location}
+                        onChange={handleInputChange}
+                        placeholder="Enter party location"
+                        required
+                      />
+                    </div>
+                    
+                    <div className="form-group">
+                      <label htmlFor="date">Date</label>
+                      <input
+                        type="date"
+                        id="date"
+                        name="date"
+                        value={partyDetails.date}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    
+                    <div className="form-group">
+                      <label htmlFor="time">Time</label>
+                      <input
+                        type="time"
+                        id="time"
+                        name="time"
+                        value={partyDetails.time}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    
+                    <div className="form-group">
+                      <label htmlFor="host">Host Name</label>
+                      <input
+                        type="text"
+                        id="host"
+                        name="host"
+                        value={partyDetails.host}
+                        onChange={handleInputChange}
+                        placeholder="Enter host name"
+                        required
+                      />
+                    </div>
+                    
+                    <div className="form-group">
+                      <label htmlFor="details">Additional Details</label>
+                      <textarea
+                        id="details"
+                        name="details"
+                        value={partyDetails.details}
+                        onChange={handleInputChange}
+                        placeholder="Enter dress code, special instructions, etc."
+                        rows="4"
+                      ></textarea>
+                    </div>
+                    
+                    <div className="form-group">
+                      <label>Choose Background Theme</label>
+                      <div className="theme-selection">
+                        {[1, 2, 3, 4, 5].map((num) => (
+                          <div
+                            key={num}
+                            className={`theme-option theme-option-${num} ${partyDetails.theme === `theme-option-${num}` ? 'selected' : ''}`}
+                            onClick={() => handleThemeSelect(`theme-option-${num}`)}
+                          ></div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <button type="submit" className="btn">Create Invitation</button>
+                  </form>
+                </div>
+              </div>
+            );
+          
+          case 'view':
+            return (
+              <div className="code-entry">
+                <div className="nav-buttons">
+                  <button className="btn" onClick={() => setCurrentView('home')}>
+                    <i className="fas fa-arrow-left"></i> Back to Home
+                  </button>
+                </div>
+                <h2>Enter Invitation Code</h2>
+                <div className="card">
+                  <p>Enter the invitation code provided by the host to view party details.</p>
+                  <form onSubmit={handleViewInvitation}>
+                    <div className="form-group">
+                      <input
+                        type="text"
+                        value={viewCode}
+                        onChange={(e) => setViewCode(e.target.value)}
+                        placeholder="Enter code (e.g., ABC123)"
+                        required
+                      />
+                    </div>
+                    <button type="submit" className="btn">View Invitation</button>
+                  </form>
+                </div>
+              </div>
+            );
+          
+          case 'success':
+            return (
+              <div className="success-message">
+                <div className="nav-buttons">
+                  <button className="btn" onClick={() => setCurrentView('home')}>
+                    <i className="fas fa-arrow-left"></i> Back to Home
+                  </button>
+                </div>
+                <h2>Invitation Created Successfully!</h2>
+                <div className="card">
+                  <p>Share this unique code with your guests:</p>
+                  <div className="generated-code">{generatedCode}</div>
+                  <button className="btn copy-button" onClick={copyToClipboard}>
+                    <i className="fas fa-copy"></i> Copy Code
+                  </button>
+                  <p>Or share directly via:</p>
+                  <div className="share-options">
+                    <div className="share-button share-facebook">
+                      <i className="fab fa-facebook-f"></i>
+                    </div>
+                    <div className="share-button share-twitter">
+                      <i className="fab fa-twitter"></i>
+                    </div>
+                    <div className="share-button share-whatsapp">
+                      <i className="fab fa-whatsapp"></i>
+                    </div>
+                    <div className="share-button share-email">
+                      <i className="fas fa-envelope"></i>
+                    </div>
+                  </div>
+                  <button 
+                    className="btn btn-secondary" 
+                    style={{ marginTop: '20px' }}
+                    onClick={() => {
+                      setViewCode(generatedCode);
+                      setCurrentView('invitation');
+                      setViewInvitation({ ...partyDetails, code: generatedCode });
+                      setShowConfetti(true);
+                      setTimeout(() => setShowConfetti(false), 5000);
+                    }}
+                  >
+                    <i className="fas fa-eye"></i> Preview Invitation
+                  </button>
+                </div>
+              </div>
+            );
+          
+          case 'invitation':
+            if (!viewInvitation) return <div>Loading...</div>;
+            
+            const formatDate = (dateStr) => {
+              if (!dateStr) return '';
+              const date = new Date(dateStr);
+              return date.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+              });
+            };
+            
+            const formatTime = (timeStr) => {
+              if (!timeStr) return '';
+              const [hours, minutes] = timeStr.split(':');
+              const period = hours >= 12 ? 'PM' : 'AM';
+              const formattedHours = hours % 12 || 12;
+              return `${formattedHours}:${minutes} ${period}`;
+            };
+            
+            return (
+              <div className="view-invitation">
+                <div className="nav-buttons">
+                  <button className="btn" onClick={() => setCurrentView('home')}>
+                    <i className="fas fa-arrow-left"></i> Back to Home
+                  </button>
+                </div>
+                
+                <div className="invitation-display">
+                  <div className={`invitation-background ${viewInvitation.theme}`}></div>
+                  <div className="invitation-content">
+                    <h1 className="invitation-title">{viewInvitation.title}</h1>
+                    
+                    <div className="invitation-details">
+                      <div className="invitation-detail">
+                        <div className="detail-icon">
+                          <i className="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>{viewInvitation.location}</div>
+                      </div>
+                      
+                      <div className="invitation-detail">
+                        <div className="detail-icon">
+                          <i className="fas fa-calendar-alt"></i>
+                        </div>
+                        <div>{formatDate(viewInvitation.date)}</div>
+                      </div>
+                      
+                      <div className="invitation-detail">
+                        <div className="detail-icon">
+                          <i className="fas fa-clock"></i>
+                        </div>
+                        <div>{formatTime(viewInvitation.time)}</div>
+                      </div>
+                    </div>
+                    
+                    <div className="invitation-host">
+                      Hosted by: {viewInvitation.host}
+                    </div>
+                    
+                    {viewInvitation.details && (
+                      <div className="invitation-extra">
+                        <h3>Additional Information:</h3>
+                        <p>{viewInvitation.details}</p>
+                      </div>
+                    )}
+                    
+                    <div className="invitation-code">
+                      Invitation Code: {viewInvitation.code}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          
+          default:
+            return <div>Page not found</div>;
+        }
+      };
+
+      return (
+        <div className="container">
+          {renderView()}
+          {showConfetti && (
+            <div className="confetti-container">
+              {generateConfetti()}
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    // Render the App
+    ReactDOM.render(<App />, document.getElementById('app'));
+  </script>
+</body>
+</html>
