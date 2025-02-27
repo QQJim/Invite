@@ -457,6 +457,12 @@
       }
     }
   </style>
+  <!-- Firebase CDN -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+  
+  <!-- Font Awesome for icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
   <!-- Font Awesome for icons -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
 </head>
@@ -468,6 +474,19 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.21.2/babel.min.js"></script>
 
   <script type="text/babel">
+        const firebaseConfig = {
+  apiKey: "AIzaSyB_r4w3pb1ZIO8YUCA9Yl9IITSHZi3cCiI",
+  authDomain: "class-6bb0b.firebaseapp.com",
+  projectId: "class-6bb0b",
+  storageBucket: "class-6bb0b.firebasestorage.app",
+  messagingSenderId: "709913685558",
+  appId: "1:709913685558:web:2b9721539f1a2d55527297",
+    };
+
+    // 初始化 Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
     // Main App Component
     const App = () => {
       const [currentView, setCurrentView] = React.useState('home');
@@ -485,17 +504,23 @@
       const [viewInvitation, setViewInvitation] = React.useState(null);
       const [showConfetti, setShowConfetti] = React.useState(false);
 
-      // Store invitations in localStorage
-      const invitations = React.useRef(
-        JSON.parse(localStorage.getItem('invitations')) || {}
-      );
-
-      // Save invitation to localStorage
       const saveInvitation = (code, details) => {
-        invitations.current[code] = details;
-        localStorage.setItem('invitations', JSON.stringify(invitations.current));
-      };
-
+  // 本地保存
+  invitations.current[code] = details;
+  localStorage.setItem('invitations', JSON.stringify(invitations.current));
+  
+  // 雲端保存到 Firebase
+  db.collection("invitations").doc(code).set({
+    ...details,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  })
+  .then(() => {
+    console.log("邀請成功保存到雲端!");
+  })
+  .catch((error) => {
+    console.error("保存到雲端時出錯:", error);
+  });
+};
       // Generate a random code
       const generateRandomCode = () => {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -532,22 +557,42 @@
         }));
       };
 
-      // Handle view invitation by code
-      const handleViewInvitation = (e) => {
-        e.preventDefault();
-        const code = viewCode.toUpperCase();
-        const invitation = invitations.current[code];
-        
-        if (invitation) {
-          setViewInvitation({ ...invitation, code });
-          setCurrentView('invitation');
-          setShowConfetti(true);
-          setTimeout(() => setShowConfetti(false), 5000);
-        } else {
-          alert('Invalid invitation code. Please check and try again.');
-        }
-      };
-
+      // 處理查看邀請，先本地查詢再雲端查詢
+const handleViewInvitation = (e) => {
+  e.preventDefault();
+  const code = viewCode.toUpperCase();
+  
+  // 先查看本地是否有該邀請
+  const localInvitation = invitations.current[code];
+  if (localInvitation) {
+    setViewInvitation({ ...localInvitation, code });
+    setCurrentView('invitation');
+    setShowConfetti(true);
+    setTimeout(() => setShowConfetti(false), 5000);
+    return;
+  }
+  
+  // 如果本地沒有，查詢雲端
+  db.collection("invitations").doc(code).get()
+    .then((doc) => {
+      if (doc.exists) {
+        const invitation = doc.data();
+        // 也保存到本地，方便下次查看
+        invitations.current[code] = invitation;
+        localStorage.setItem('invitations', JSON.stringify(invitations.current));
+        setViewInvitation({ ...invitation, code });
+        setCurrentView('invitation');
+        setShowConfetti(true);
+        setTimeout(() => setShowConfetti(false), 5000);
+      } else {
+        alert('無效的邀請碼。請檢查並重試。');
+      }
+    })
+    .catch((error) => {
+      console.error("從雲端獲取邀請時出錯:", error);
+      alert('獲取邀請時發生錯誤。請稍後再試。');
+    });
+};
       // Generate confetti elements
       const generateConfetti = () => {
         if (!showConfetti) return null;
