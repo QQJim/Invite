@@ -466,8 +466,26 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.21.2/babel.min.js"></script>
+  <!-- Firebase SDK -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.2/firebase-app-compat.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.2/firebase-database-compat.min.js"></script>
 
   <script type="text/babel">
+    // Firebase 初始化
+const firebaseConfig = {
+    apiKey: "AIzaSyAx-v3nppwegzwA3X_7ztzyMI76no1IZxM",
+  authDomain: "party-invitation-31400.firebaseapp.com",
+  projectId: "party-invitation-31400",
+  storageBucket: "party-invitation-31400.firebasestorage.app",
+  messagingSenderId: "937467379106",
+  appId: "1:937467379106:web:78bdb8230578150962c6fb",
+};
+
+// 初始化 Firebase
+firebase.initializeApp(firebaseConfig);
+
+// 獲取資料庫參考
+const database = firebase.database();
     // Main App Component
     const App = () => {
       const [currentView, setCurrentView] = React.useState('home');
@@ -486,15 +504,32 @@
       const [showConfetti, setShowConfetti] = React.useState(false);
 
       // Store invitations in localStorage
-      const invitations = React.useRef(
-        JSON.parse(localStorage.getItem('invitations')) || {}
-      );
+      const [invitations, setInvitations] = React.useState({});
+      React.useEffect(() => {
+  // 從 Firebase 中讀取邀請資料
+  const invitationsRef = database.ref('invitations');
+  invitationsRef.on('value', (snapshot) => {
+    if (snapshot.exists()) {
+      setInvitations(snapshot.val() || {});
+    }
+  });
+  
+  // 在元件卸載時取消監聽
+  return () => invitationsRef.off('value');
+}, []);
 
       // Save invitation to localStorage
       const saveInvitation = (code, details) => {
-        invitations.current[code] = details;
-        localStorage.setItem('invitations', JSON.stringify(invitations.current));
-      };
+  // 儲存邀請到 Firebase
+  database.ref(`invitations/${code}`).set(details)
+    .then(() => {
+      console.log('邀請已成功儲存到 Firebase');
+    })
+    .catch((error) => {
+      console.error('儲存邀請時發生錯誤：', error);
+      alert('儲存邀請時發生錯誤，請稍後再試。');
+    });
+};
 
       // Generate a random code
       const generateRandomCode = () => {
@@ -534,19 +569,27 @@
 
       // Handle view invitation by code
       const handleViewInvitation = (e) => {
-        e.preventDefault();
-        const code = viewCode.toUpperCase();
-        const invitation = invitations.current[code];
-        
-        if (invitation) {
-          setViewInvitation({ ...invitation, code });
-          setCurrentView('invitation');
-          setShowConfetti(true);
-          setTimeout(() => setShowConfetti(false), 5000);
-        } else {
-          alert('Invalid invitation code. Please check and try again.');
-        }
-      };
+  e.preventDefault();
+  const code = viewCode.toUpperCase();
+  
+  // 從 Firebase 中查詢邀請資料
+  database.ref(`invitations/${code}`).once('value')
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        const invitation = snapshot.val();
+        setViewInvitation({ ...invitation, code });
+        setCurrentView('invitation');
+        setShowConfetti(true);
+        setTimeout(() => setShowConfetti(false), 5000);
+      } else {
+        alert('無效的邀請碼。請檢查後再試一次。');
+      }
+    })
+    .catch((error) => {
+      console.error('讀取邀請資料時發生錯誤：', error);
+      alert('讀取邀請資料時發生錯誤，請稍後再試。');
+    });
+};
 
       // Generate confetti elements
       const generateConfetti = () => {
